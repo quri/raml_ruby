@@ -45,7 +45,9 @@ module Raml
 
         if val.is_a? Raml::Parser::Include
           child_wd = expand_includes_working_dir cwd, val.path
+          path = val.path
           val = val.content cwd
+          val.define_singleton_method(:file_path) { child_wd + "/" + path.split("/").last }
         end
 
         expand_includes val, child_wd
@@ -54,11 +56,11 @@ module Raml
       end
       
       def expand_includes_working_dir(current_wd, include_pathname)
-        include_path = File.dirname include_pathname
-        if include_path.start_with? '/'
-          include_path
+        file_path = File.dirname include_pathname
+        if file_path.start_with? '/'
+         file_path
         else
-          "#{current_wd}/#{include_path}"
+          "#{current_wd}/#{file_path}"
         end
       end
     end
