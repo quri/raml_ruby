@@ -36,4 +36,4 @@ You can retrieve a representation of a resource by GETting its url. The easiest 
 EOS
   }
   subject { Raml::Documentation.new(title, {'content' => content }, root) }
- end
+end

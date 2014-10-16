@@ -52,7 +52,11 @@ module Raml
                     :protocols  , :media_type
 
     non_scalar_property :base_uri_parameters, :documentation , :schemas,  :secured_by,
+<<<<<<< 4212f6d6f4f43cfff0af3948964ee376c1ba5f5f
                         :security_schemes   , :resource_types, :traits, :security_schemes
+=======
+                        :security_schemes   , :resource_types, :traits
+>>>>>>> Remove view documentation logic (should be in a different gem, not the parser)
 
     regexp_property( /\A\//, ->(key,value) { Resource.new key, value, self } )
 
