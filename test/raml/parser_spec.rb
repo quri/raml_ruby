@@ -37,6 +37,12 @@ describe Raml::Parser do
         root.schemas['File'      ].value.should eq 'file_schema'
       end
       
+      it "inserts singleton method to read the include_path" do
+        file = File.new 'fixtures/include_1.raml'
+        root = Raml::Parser.parse file.read, 'fixtures'
+        root.schemas['FileUpdate'].value.include_path.should eq 'fixtures/schemas/filesystem'
+      end
+
       context 'when the included file is not redable' do
         it do
           expect { Raml::Parser.parse('- !include does_not_exit') }.to raise_error Raml::CantIncludeFile
