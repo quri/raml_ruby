@@ -3,21 +3,6 @@ require 'active_support/core_ext/class/attribute'
 
 module Raml
   class Node
-    class << self
-      # @private
-      def relative_path(file)
-        File.join(
-          *File.dirname(__FILE__).
-            split(File::SEPARATOR).
-            reverse.
-            drop_while { |p| p != 'lib' }.
-            drop(1).
-            reverse,
-          'templates',
-          file
-        )
-      end
-    end
 
     # @!attribute [r] name
     #   @return [String,Integer] the node name (e.g. resource path, header name, etc). Usually a
