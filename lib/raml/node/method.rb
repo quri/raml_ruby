@@ -91,7 +91,7 @@ module Raml
     def instantiate_trait(trait)
       reserved_params = {
         'resourcePath'     => @parent.resource_path,
-        'resourcePathName' => @parent.resource_path.split('/')[-1],
+        'resourcePathName' => @parent.resource_path_name,
         'methodName'       => self.name
       }
       if TraitReference === trait
