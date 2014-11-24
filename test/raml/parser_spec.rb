@@ -23,7 +23,7 @@ describe Raml::Parser do
       root.should be_a Raml::Root
       root.title.should eq 'Filesystem API'
     end
-    
+
     context 'when the RAML file has !include directives' do
       it 'inserts the data into the right location and parses RAML included files' do
         file = File.new 'fixtures/include_1.raml'
@@ -36,11 +36,11 @@ describe Raml::Parser do
         root.schemas['Test'      ].value.should eq 'test_schema'
         root.schemas['File'      ].value.should eq 'file_schema'
       end
-      
+
       it "inserts singleton method to read the include_path" do
         file = File.new 'fixtures/include_1.raml'
         root = Raml::Parser.parse file.read, 'fixtures'
-        root.schemas['FileUpdate'].value.include_path.should eq 'fixtures/schemas/filesystem'
+        root.schemas['FileUpdate'].value.file_path.should eq 'fixtures/schemas/filesystem/fileupdate.json'
       end
 
       context 'when the included file is not redable' do
@@ -48,7 +48,7 @@ describe Raml::Parser do
           expect { Raml::Parser.parse('- !include does_not_exit') }.to raise_error Raml::CantIncludeFile
         end
       end
-      
+
       context 'when the !include directive is not given a file path' do
         it do
           expect { Raml::Parser.parse('- !include') }.to raise_error Raml::CantIncludeFile
