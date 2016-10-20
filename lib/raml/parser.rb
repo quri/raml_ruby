@@ -9,7 +9,7 @@ module Raml
         
         data = YAML.load data
         expand_includes data, file_dir
-        
+
         Root.new data
       end
 
@@ -22,28 +22,37 @@ module Raml
       def expand_includes(val, cwd)
         case val
         when Hash
-          val.merge!(val, &expand_includes_transform(cwd))
+          val.merge!(val, &expand_includes_transform_hash(cwd))
         when Array
-          val.map!(&expand_includes_transform(cwd))
+          val.map!(&expand_includes_transform_array(cwd))
         end
       end
-          
-      def expand_includes_transform(cwd)
-        proc do |arg1, arg2|
-          val      = arg2.nil? ? arg1 : arg2
-          child_wd = cwd
-          
-          if val.is_a? Raml::Parser::Include
-            child_wd = expand_includes_working_dir cwd, val.path
-            path = val.path
-            val      = val.content cwd
-            val.define_singleton_method(:file_path) { child_wd + "/" + path.split("/").last }
-          end
-          
-          expand_includes val, child_wd
-          
-          val
+
+      def expand_includes_transform_array(cwd)
+        proc do |arg|
+          expand_includes_transform(arg, cwd)
         end
+      end
+
+      def expand_includes_transform_hash(cwd)
+        proc do |arg1, arg2|
+          expand_includes_transform(arg2, cwd)
+        end
+      end
+
+      def expand_includes_transform(val, cwd)
+        child_wd = cwd
+
+        if val.is_a? Raml::Parser::Include
+          child_wd = expand_includes_working_dir cwd, val.path
+          path = val.path
+          val = val.content cwd
+          val.define_singleton_method(:file_path) { child_wd + "/" + path.split("/").last }
+        end
+
+        expand_includes val, child_wd
+
+        val
       end
       
       def expand_includes_working_dir(current_wd, include_pathname)
