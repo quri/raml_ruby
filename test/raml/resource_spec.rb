@@ -304,33 +304,6 @@ describe Raml::Resource do
       }
       it { expect { subject }.to raise_error Raml::InvalidProperty, /Optional properties/ }
     end
-
-    context 'when the securedBy property is defined' do
-      let (:root_data) { {'title' => 'x', 'baseUri' => 'http://foo.com', 'securitySchemes' => ['oauth_2_0' => {'type' => 'OAuth 2.0'}, 'oauth_1_0' => {'type' => 'OAuth 1.0'}] } }
-      context 'when the securedBy property is an array of strings' do
-        let(:data) { { 'securedBy' => ['oauth_2_0', 'oauth_1_0'] } }
-        it { expect{ subject }.to_not raise_error }
-      end
-      context 'when the securedBy property is an array of strings and "null"' do
-        let(:data) { { 'securedBy' => ['oauth_2_0', 'null'] } }
-        it { expect{ subject }.to_not raise_error }
-      end
-      context 'when the securedBy property is an array of hash with single key' do
-        let(:data) { { 'securedBy' => ['oauth_2_0' => {'scopes' => 'ADMINISTRATOR'}] } }
-        it { expect{ subject }.to_not raise_error }
-      end
-      context 'when the securedBy property references a missing security scheme' do
-        let(:data) { { 'securedBy' => ['bar'] } }
-        it { expect{ subject }.to raise_error Raml::UnknownSecuritySchemeReference, /bar/}
-      end
-      context 'when the securedBy property is included it is accessible and' do
-        let(:data) { { 'securedBy' => ['oauth_2_0', 'oauth_1_0'] } }
-        it 'exposes the schema references' do
-          expect( subject.secured_by.values ).to all( be_a Raml::SecuritySchemeReference )
-          subject.secured_by.keys.should contain_exactly('oauth_2_0', 'oauth_1_0')
-        end
-      end
-    end
   end
 
   describe '#apply_resource_type' do
@@ -341,10 +314,9 @@ describe Raml::Resource do
       'get'  => {'description' => 'method description'},
       'post' => {},
       '/foo' => {},
-      '/bar/{id}' => {}
+      '/bar' => {}
     } }
     let(:resource) { Raml::Resource.new('/foo', resource_data, root)  }
-    let(:resource_with_parameter) { Raml::Resource.new('/bar/{id}', resource_data, root)  }
     context 'when it has a resource type' do
       it 'merges the resource type to the resource' do
         resource.type.should be_a Raml::ResourceType
@@ -359,12 +331,6 @@ describe Raml::Resource do
         resource.apply_resource_type
         resource.methods['get'].description.should  eq 'method description'
         resource.methods['get'].display_name.should eq 'resource type displayName'
-        resource.resource_path.should eq '/foo'
-        resource.resource_path_name.should eq 'foo'
-      end
-      it 'sets the resource path name stripping out uri parameters' do
-        resource_with_parameter.apply_resource_type
-        resource_with_parameter.resource_path_name.should eq 'bar'
       end
     end
     context 'when it has nested resources' do
