@@ -1,6 +1,6 @@
 # RAML ruby
 
-[![Build Status](https://travis-ci.org/coub/raml_ruby.svg?branch=master)](https://travis-ci.org/coub/raml_ruby)
+[![Build Status](https://travis-ci.org/eliaslevy/raml_ruby.svg?branch=master)](https://travis-ci.org/eliaslevy/raml_ruby)
 
 Implementation of a RAML parser in Ruby. It uses the stdlib YAML parser
 (Psych). It can also generate HTML documentation.
@@ -11,7 +11,7 @@ Implementation of a RAML parser in Ruby. It uses the stdlib YAML parser
 
 Add this line to your application's Gemfile:
 
-    gem 'raml_ruby'
+    gem 'raml-ruby'
 
 And then execute:
 
@@ -19,7 +19,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install raml_ruby
+    $ gem install raml-ruby
 -->
 
 ## Usage
@@ -38,7 +38,7 @@ or
 
 To parse the file:
 
-    Raml.parse_file("path/to/your/file.raml")
+    Raml.pase_file("path/to/your/file.raml")
 
 ## To Do
 
@@ -56,8 +56,5 @@ More a more detailed analysis of the spec requirements and which ones are finish
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-## License
-
-See [LICENSE](https://github.com/coub/raml_ruby/blob/master/LICENSE.txt).
 
 
